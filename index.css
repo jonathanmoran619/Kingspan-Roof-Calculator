@@ -1,0 +1,18 @@
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .print-no-break {
+    page-break-inside: avoid;
+  }
+  
+  /* Ensure the SVG is sized correctly for printing */
+  svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
