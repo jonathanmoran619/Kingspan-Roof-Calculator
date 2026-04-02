@@ -10,7 +10,10 @@ const App: React.FC = () => {
     ancho: 30,
     proyeccion: 11.9,
     pendiente: 7,
+    proyeccion2: 11.9,
+    pendiente2: 7,
     separacion: 1.5,
+    roofType: 'single',
   });
 
   const [results, setResults] = useState<CalculationResult[]>([]);
@@ -37,7 +40,15 @@ const App: React.FC = () => {
   };
 
   const resetForm = () => {
-    setInputs({ ancho: 0, proyeccion: 0, pendiente: 0, separacion: 1.5 });
+    setInputs({ 
+      ancho: 0, 
+      proyeccion: 0, 
+      pendiente: 0, 
+      proyeccion2: 0, 
+      pendiente2: 0, 
+      separacion: 1.5, 
+      roofType: 'single' 
+    });
     setResults([]);
     setHasCalculated(false);
   };
@@ -75,9 +86,24 @@ const App: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">Configuración de Proyecto</h2>
               
+              <div className="flex gap-2 mb-6 p-1 bg-slate-100 rounded-xl">
+                <button 
+                  onClick={() => setInputs(prev => ({ ...prev, roofType: 'single' }))}
+                  className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all ${inputs.roofType === 'single' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Una Agua
+                </button>
+                <button 
+                  onClick={() => setInputs(prev => ({ ...prev, roofType: 'double' }))}
+                  className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all ${inputs.roofType === 'double' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Dos Aguas
+                </button>
+              </div>
+
               <div className="mb-8 overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 text-center">
                 <img 
-                    src="https://i.ibb.co/0R80GgpY/JPG-Una-Pendiente.jpg" 
+                    src={inputs.roofType === 'single' ? "https://i.ibb.co/0R80GgpY/JPG-Una-Pendiente.jpg" : "https://i.ibb.co/XfXv0P5B/JPG-Dos-Pendientes.jpg"} 
                     alt="Diagrama Cubierta" 
                     className="mx-auto w-full h-auto max-h-64 object-contain block opacity-95 transition-opacity rounded-lg"
                 />
@@ -101,32 +127,70 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Proyección (B) [m]</label>
-                    <input 
-                      id="proyeccion"
-                      type="number" 
-                      step="0.01"
-                      required
-                      value={inputs.proyeccion || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium"
-                    />
+                <div className="space-y-4">
+                  <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+                    <p className="text-[10px] font-bold text-blue-600 uppercase mb-3 tracking-widest">{inputs.roofType === 'single' ? 'Datos de Vertiente' : 'Vertiente 1'}</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Proyección (B) [m]</label>
+                        <input 
+                          id="proyeccion"
+                          type="number" 
+                          step="0.01"
+                          required
+                          value={inputs.proyeccion || ''}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Pendiente (%)</label>
+                        <input 
+                          id="pendiente"
+                          type="number" 
+                          step="0.1"
+                          required
+                          min="0"
+                          value={inputs.pendiente === 0 ? '0' : inputs.pendiente || ''}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pendiente (%)</label>
-                    <input 
-                      id="pendiente"
-                      type="number" 
-                      step="0.1"
-                      required
-                      min="0"
-                      value={inputs.pendiente === 0 ? '0' : inputs.pendiente || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium"
-                    />
-                  </div>
+
+                  {inputs.roofType === 'double' && (
+                    <div className="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 animate-in fade-in slide-in-from-top-2">
+                      <p className="text-[10px] font-bold text-indigo-600 uppercase mb-3 tracking-widest">Vertiente 2</p>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Proyección 2 (C) [m]</label>
+                          <input 
+                            id="proyeccion2"
+                            type="number" 
+                            step="0.01"
+                            required
+                            value={inputs.proyeccion2 || ''}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Pendiente 2 (%)</label>
+                          <input 
+                            id="pendiente2"
+                            type="number" 
+                            step="0.1"
+                            required
+                            min="0"
+                            value={inputs.pendiente2 === 0 ? '0' : inputs.pendiente2 || ''}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1">
@@ -192,19 +256,35 @@ const App: React.FC = () => {
                     <h3 className="text-sm font-bold text-slate-800 mb-4 uppercase tracking-wider">Especificaciones de Entrada</h3>
                     <div className="grid grid-cols-4 gap-4">
                       <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Tipo</p>
+                        <p className="text-sm font-bold text-slate-700">{inputs.roofType === 'single' ? 'Una Agua' : 'Dos Aguas'}</p>
+                      </div>
+                      <div>
                         <p className="text-[10px] font-bold text-slate-400 uppercase">Ancho (A)</p>
                         <p className="text-sm font-bold text-slate-700">{inputs.ancho} m</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase">Proyección (B)</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Proyección 1</p>
                         <p className="text-sm font-bold text-slate-700">{inputs.proyeccion} m</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase">Pendiente</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Pendiente 1</p>
                         <p className="text-sm font-bold text-slate-700">{inputs.pendiente} %</p>
                       </div>
+                      {inputs.roofType === 'double' && (
+                        <>
+                          <div>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase">Proyección 2</p>
+                            <p className="text-sm font-bold text-slate-700">{inputs.proyeccion2} m</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase">Pendiente 2</p>
+                            <p className="text-sm font-bold text-slate-700">{inputs.pendiente2} %</p>
+                          </div>
+                        </>
+                      )}
                       <div>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase">Separación Correas</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Separación</p>
                         <p className="text-sm font-bold text-slate-700">{inputs.separacion} m</p>
                       </div>
                     </div>
@@ -249,8 +329,9 @@ const App: React.FC = () => {
 
                 <RoofVisualizer 
                   ancho={inputs.ancho} 
-                  longitudVertiente={results.find(r => r.label === 'Longitud de Vertiente')?.numericValue || 0} 
-                  traslapos={results.find(r => r.label === 'Traslapos Necesarios')?.numericValue || 0}
+                  roofType={inputs.roofType}
+                  longitudVertiente={results.find(r => r.label === 'Longitud de Vertiente' || r.label === 'Longitud Vertiente 1')?.numericValue || 0} 
+                  longitudVertiente2={results.find(r => r.label === 'Longitud Vertiente 2')?.numericValue || 0}
                 />
               </div>
             )}
@@ -260,7 +341,7 @@ const App: React.FC = () => {
 
       <footer className="mt-20 border-t border-slate-200 pt-12 pb-8 px-4 text-center print:hidden">
         <div className="max-w-6xl mx-auto">
-          <p className="text-slate-400 text-sm font-medium">© 2025 Kingspan Paneles Aislados</p>
+          <p className="text-slate-400 text-sm font-medium">© 2026 Kingspan Paneles Aislados</p>
         </div>
       </footer>
     </div>
