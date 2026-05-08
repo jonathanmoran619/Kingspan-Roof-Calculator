@@ -4,6 +4,7 @@ import { RoofInputs, CalculationResult } from './types';
 import { calculateRoofData } from './utils/calculations';
 import ResultCard from './components/ResultCard';
 import RoofVisualizer from './components/RoofVisualizer';
+import Roof3D from './components/Roof3D';
 
 const App: React.FC = () => {
   const [inputs, setInputs] = useState<RoofInputs>({
@@ -292,21 +293,21 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 print:border-none print:shadow-none print:p-0">
-                  <div className="flex justify-between items-center mb-8">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                     <h2 className="text-2xl font-bold text-slate-800">Resultados del Análisis</h2>
-                    <div className="flex gap-2 print:hidden">
+                    <div className="flex flex-wrap gap-2 print:hidden">
                       <button 
                           onClick={handlePrint}
                           className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-bold transition-all flex items-center gap-2"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                        Imprimir PDF
+                        PDF
                       </button>
                       <button 
                           onClick={copyToClipboard}
                           className={`px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 border ${copied ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
                       >
-                        {copied ? 'Copiado!' : 'Copiar Datos'}
+                        {copied ? 'Copiado!' : 'Copiar'}
                       </button>
                     </div>
                   </div>
@@ -327,12 +328,22 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                <RoofVisualizer 
-                  ancho={inputs.ancho} 
-                  roofType={inputs.roofType}
-                  longitudVertiente={results.find(r => r.label === 'Longitud de Vertiente' || r.label === 'Longitud Vertiente 1')?.numericValue || 0} 
-                  longitudVertiente2={results.find(r => r.label === 'Longitud Vertiente 2')?.numericValue || 0}
-                />
+                <div className="space-y-6">
+                  <RoofVisualizer 
+                    ancho={inputs.ancho} 
+                    roofType={inputs.roofType}
+                    longitudVertiente={results.find(r => r.label === 'Longitud de Vertiente' || r.label === 'Longitud Vertiente 1')?.numericValue || 0} 
+                    longitudVertiente2={results.find(r => r.label === 'Longitud Vertiente 2')?.numericValue || 0}
+                  />
+                  <Roof3D 
+                    ancho={inputs.ancho}
+                    roofType={inputs.roofType}
+                    proyeccion={inputs.proyeccion}
+                    pendiente={inputs.pendiente}
+                    proyeccion2={inputs.proyeccion2}
+                    pendiente2={inputs.pendiente2}
+                  />
+                </div>
               </div>
             )}
           </div>
